@@ -1,6 +1,6 @@
 /*!
  * protobuf.js v6.8.0 (c) 2016, daniel wirtz
- * compiled tue, 08 aug 2017 04:30:34 utc
+ * compiled tue, 08 aug 2017 04:39:03 utc
  * licensed under the bsd-3-clause license
  * see: https://github.com/dcodeio/protobuf.js for details
  */
@@ -36,6 +36,40 @@
         module.exports = protobuf;
 
 })/* end of prelude */({1:[function(require,module,exports){
+"use strict";
+module.exports = inquire;
+
+/**
+ * Requires a module only if available.
+ * @memberof util
+ * @param {string} moduleName Module to require
+ * @returns {?Object} Required module if available and not empty, otherwise `null`
+ */
+function inquire(moduleName) {
+    try {
+        var mod = require(moduleName); // eslint-disable-line no-eval
+        if (mod && (mod.length || Object.keys(mod).length))
+            return mod;
+    } catch (e) {} // eslint-disable-line no-empty
+    return null;
+}
+
+/*
+// maybe worth a shot to prevent renaming issues:
+// see: https://github.com/webpack/webpack/blob/master/lib/dependencies/CommonJsRequireDependencyParserPlugin.js
+// triggers on:
+// - expression require.cache
+// - expression require (???)
+// - call require
+// - call require:commonjs:item
+// - call require:commonjs:context
+
+Object.defineProperty(Function.prototype, "__self", { get: function() { return this; } });
+var r = require.__self;
+delete Function.prototype.__self;
+*/
+
+},{}],2:[function(require,module,exports){
 "use strict";
 module.exports = asPromise;
 
@@ -89,7 +123,7 @@ function asPromise(fn, ctx/*, varargs */) {
     });
 }
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 "use strict";
 
 /**
@@ -230,7 +264,7 @@ base64.test = function test(string) {
     return /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(string);
 };
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
 module.exports = codegen;
 
@@ -331,7 +365,7 @@ function codegen(functionParams, functionName) {
  */
 codegen.verbose = false;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 module.exports = EventEmitter;
 
@@ -409,12 +443,12 @@ EventEmitter.prototype.emit = function emit(evt) {
     return this;
 };
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 "use strict";
 module.exports = fetch;
 
-var asPromise = require(1),
-    inquire   = require(7);
+var asPromise = require(2),
+    inquire   = require(8);
 
 var fs = inquire("fs");
 
@@ -526,7 +560,7 @@ fetch.xhr = function fetch_xhr(filename, options, callback) {
     xhr.send();
 };
 
-},{"1":1,"7":7}],6:[function(require,module,exports){
+},{"2":2,"8":8}],7:[function(require,module,exports){
 "use strict";
 
 module.exports = factory(factory);
@@ -863,7 +897,7 @@ function readUintBE(buf, pos) {
           | buf[pos + 3]) >>> 0;
 }
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 module.exports = inquire;
 
@@ -882,7 +916,7 @@ function inquire(moduleName) {
     return null;
 }
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 
 /**
@@ -949,7 +983,7 @@ path.resolve = function resolve(originPath, includePath, alreadyNormalized) {
     return (originPath = originPath.replace(/(?:\/|^)[^/]+$/, "")).length ? normalize(originPath + "/" + includePath) : includePath;
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
 module.exports = pool;
 
@@ -999,7 +1033,7 @@ function pool(alloc, slice, size) {
     };
 }
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 
 /**
@@ -1106,7 +1140,7 @@ utf8.write = function utf8_write(string, buffer, offset) {
     return offset - start;
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 /**
  * Runtime message from/to plain object converters.
@@ -1114,8 +1148,8 @@ utf8.write = function utf8_write(string, buffer, offset) {
  */
 var converter = exports;
 
-var Enum = require(14),
-    util = require(33);
+var Enum = require(15),
+    util = require(34);
 
 /**
  * Generates a partial value fromObject conveter.
@@ -1395,13 +1429,13 @@ converter.toObject = function toObject(mtype) {
     /* eslint-enable no-unexpected-multiline, block-scoped-var, no-redeclare */
 };
 
-},{"14":14,"33":33}],12:[function(require,module,exports){
+},{"15":15,"34":34}],13:[function(require,module,exports){
 "use strict";
 module.exports = decoder;
 
-var Enum    = require(14),
-    types   = require(32),
-    util    = require(33);
+var Enum    = require(15),
+    types   = require(33),
+    util    = require(34);
 
 function missing(field) {
     return "missing required '" + field.name + "'";
@@ -1503,13 +1537,13 @@ function decoder(mtype) {
     /* eslint-enable no-unexpected-multiline */
 }
 
-},{"14":14,"32":32,"33":33}],13:[function(require,module,exports){
+},{"15":15,"33":33,"34":34}],14:[function(require,module,exports){
 "use strict";
 module.exports = encoder;
 
-var Enum     = require(14),
-    types    = require(32),
-    util     = require(33);
+var Enum     = require(15),
+    types    = require(33),
+    util     = require(34);
 
 /**
  * Generates a partial message type encoder.
@@ -1604,15 +1638,15 @@ function encoder(mtype) {
     ("return w");
     /* eslint-enable no-unexpected-multiline, block-scoped-var, no-redeclare */
 }
-},{"14":14,"32":32,"33":33}],14:[function(require,module,exports){
+},{"15":15,"33":33,"34":34}],15:[function(require,module,exports){
 "use strict";
 module.exports = Enum;
 
 // extends ReflectionObject
-var ReflectionObject = require(22);
+var ReflectionObject = require(23);
 ((Enum.prototype = Object.create(ReflectionObject.prototype)).constructor = Enum).className = "Enum";
 
-var util = require(33);
+var util = require(34);
 
 /**
  * Constructs a new enum instance.
@@ -1741,17 +1775,17 @@ Enum.prototype.remove = function(name) {
     return this;
 };
 
-},{"22":22,"33":33}],15:[function(require,module,exports){
+},{"23":23,"34":34}],16:[function(require,module,exports){
 "use strict";
 module.exports = Field;
 
 // extends ReflectionObject
-var ReflectionObject = require(22);
+var ReflectionObject = require(23);
 ((Field.prototype = Object.create(ReflectionObject.prototype)).constructor = Field).className = "Field";
 
-var Enum  = require(14),
-    types = require(32),
-    util  = require(33);
+var Enum  = require(15),
+    types = require(33),
+    util  = require(34);
 
 var Type; // cyclic
 
@@ -2101,9 +2135,9 @@ Field._configure = function configure(Type_) {
     Type = Type_;
 };
 
-},{"14":14,"22":22,"32":32,"33":33}],16:[function(require,module,exports){
+},{"15":15,"23":23,"33":33,"34":34}],17:[function(require,module,exports){
 "use strict";
-var protobuf = module.exports = require(17);
+var protobuf = module.exports = require(18);
 
 protobuf.build = "light";
 
@@ -2176,30 +2210,30 @@ function loadSync(filename, root) {
 protobuf.loadSync = loadSync;
 
 // Serialization
-protobuf.encoder          = require(13);
-protobuf.decoder          = require(12);
-protobuf.verifier         = require(36);
-protobuf.converter        = require(11);
+protobuf.encoder          = require(14);
+protobuf.decoder          = require(13);
+protobuf.verifier         = require(37);
+protobuf.converter        = require(12);
 
 // Reflection
-protobuf.ReflectionObject = require(22);
-protobuf.Namespace        = require(21);
-protobuf.Root             = require(26);
-protobuf.Enum             = require(14);
-protobuf.Type             = require(31);
-protobuf.Field            = require(15);
-protobuf.OneOf            = require(23);
-protobuf.MapField         = require(18);
-protobuf.Service          = require(30);
-protobuf.Method           = require(20);
+protobuf.ReflectionObject = require(23);
+protobuf.Namespace        = require(22);
+protobuf.Root             = require(27);
+protobuf.Enum             = require(15);
+protobuf.Type             = require(32);
+protobuf.Field            = require(16);
+protobuf.OneOf            = require(24);
+protobuf.MapField         = require(19);
+protobuf.Service          = require(31);
+protobuf.Method           = require(21);
 
 // Runtime
-protobuf.Message          = require(19);
-protobuf.wrappers         = require(37);
+protobuf.Message          = require(20);
+protobuf.wrappers         = require(38);
 
 // Utility
-protobuf.types            = require(32);
-protobuf.util             = require(33);
+protobuf.types            = require(33);
+protobuf.util             = require(34);
 
 // Configure reflection
 protobuf.ReflectionObject._configure(protobuf.Root);
@@ -2207,7 +2241,7 @@ protobuf.Namespace._configure(protobuf.Type, protobuf.Service);
 protobuf.Root._configure(protobuf.Type);
 protobuf.Field._configure(protobuf.Type);
 
-},{"11":11,"12":12,"13":13,"14":14,"15":15,"17":17,"18":18,"19":19,"20":20,"21":21,"22":22,"23":23,"26":26,"30":30,"31":31,"32":32,"33":33,"36":36,"37":37}],17:[function(require,module,exports){
+},{"12":12,"13":13,"14":14,"15":15,"16":16,"18":18,"19":19,"20":20,"21":21,"22":22,"23":23,"24":24,"27":27,"31":31,"32":32,"33":33,"34":34,"37":37,"38":38}],18:[function(require,module,exports){
 "use strict";
 var protobuf = exports;
 
@@ -2220,15 +2254,15 @@ var protobuf = exports;
 protobuf.build = "minimal";
 
 // Serialization
-protobuf.Writer       = require(38);
-protobuf.BufferWriter = require(39);
-protobuf.Reader       = require(24);
-protobuf.BufferReader = require(25);
+protobuf.Writer       = require(39);
+protobuf.BufferWriter = require(40);
+protobuf.Reader       = require(25);
+protobuf.BufferReader = require(26);
 
 // Utility
-protobuf.util         = require(35);
-protobuf.rpc          = require(28);
-protobuf.roots        = require(27);
+protobuf.util         = require(36);
+protobuf.rpc          = require(29);
+protobuf.roots        = require(28);
 protobuf.configure    = configure;
 
 /* istanbul ignore next */
@@ -2245,16 +2279,16 @@ function configure() {
 protobuf.Writer._configure(protobuf.BufferWriter);
 configure();
 
-},{"24":24,"25":25,"27":27,"28":28,"35":35,"38":38,"39":39}],18:[function(require,module,exports){
+},{"25":25,"26":26,"28":28,"29":29,"36":36,"39":39,"40":40}],19:[function(require,module,exports){
 "use strict";
 module.exports = MapField;
 
 // extends Field
-var Field = require(15);
+var Field = require(16);
 ((MapField.prototype = Object.create(Field.prototype)).constructor = MapField).className = "MapField";
 
-var types   = require(32),
-    util    = require(33);
+var types   = require(33),
+    util    = require(34);
 
 /**
  * Constructs a new map field instance.
@@ -2369,11 +2403,11 @@ MapField.d = function decorateMapField(fieldId, fieldKeyType, fieldValueType) {
     };
 };
 
-},{"15":15,"32":32,"33":33}],19:[function(require,module,exports){
+},{"16":16,"33":33,"34":34}],20:[function(require,module,exports){
 "use strict";
 module.exports = Message;
 
-var util = require(35);
+var util = require(36);
 
 /**
  * Constructs a new message instance.
@@ -2509,15 +2543,15 @@ Message.prototype.toJSON = function toJSON() {
 };
 
 /*eslint-enable valid-jsdoc*/
-},{"35":35}],20:[function(require,module,exports){
+},{"36":36}],21:[function(require,module,exports){
 "use strict";
 module.exports = Method;
 
 // extends ReflectionObject
-var ReflectionObject = require(22);
+var ReflectionObject = require(23);
 ((Method.prototype = Object.create(ReflectionObject.prototype)).constructor = Method).className = "Method";
 
-var util = require(33);
+var util = require(34);
 
 /**
  * Constructs a new service method instance.
@@ -2652,17 +2686,17 @@ Method.prototype.resolve = function resolve() {
     return ReflectionObject.prototype.resolve.call(this);
 };
 
-},{"22":22,"33":33}],21:[function(require,module,exports){
+},{"23":23,"34":34}],22:[function(require,module,exports){
 "use strict";
 module.exports = Namespace;
 
 // extends ReflectionObject
-var ReflectionObject = require(22);
+var ReflectionObject = require(23);
 ((Namespace.prototype = Object.create(ReflectionObject.prototype)).constructor = Namespace).className = "Namespace";
 
-var Enum     = require(14),
-    Field    = require(15),
-    util     = require(33);
+var Enum     = require(15),
+    Field    = require(16),
+    util     = require(34);
 
 var Type,    // cyclic
     Service; // "
@@ -3055,13 +3089,13 @@ Namespace._configure = function(Type_, Service_) {
     Service = Service_;
 };
 
-},{"14":14,"15":15,"22":22,"33":33}],22:[function(require,module,exports){
+},{"15":15,"16":16,"23":23,"34":34}],23:[function(require,module,exports){
 "use strict";
 module.exports = ReflectionObject;
 
 ReflectionObject.className = "ReflectionObject";
 
-var util = require(33);
+var util = require(34);
 
 var Root; // cyclic
 
@@ -3256,16 +3290,16 @@ ReflectionObject._configure = function(Root_) {
     Root = Root_;
 };
 
-},{"33":33}],23:[function(require,module,exports){
+},{"34":34}],24:[function(require,module,exports){
 "use strict";
 module.exports = OneOf;
 
 // extends ReflectionObject
-var ReflectionObject = require(22);
+var ReflectionObject = require(23);
 ((OneOf.prototype = Object.create(ReflectionObject.prototype)).constructor = OneOf).className = "OneOf";
 
-var Field = require(15),
-    util  = require(33);
+var Field = require(16),
+    util  = require(34);
 
 /**
  * Constructs a new oneof instance.
@@ -3451,11 +3485,11 @@ OneOf.d = function decorateOneOf() {
     };
 };
 
-},{"15":15,"22":22,"33":33}],24:[function(require,module,exports){
+},{"16":16,"23":23,"34":34}],25:[function(require,module,exports){
 "use strict";
 module.exports = Reader;
 
-var util      = require(35);
+var util      = require(36);
 
 var BufferReader; // cyclic
 
@@ -3860,15 +3894,15 @@ Reader._configure = function(BufferReader_) {
     });
 };
 
-},{"35":35}],25:[function(require,module,exports){
+},{"36":36}],26:[function(require,module,exports){
 "use strict";
 module.exports = BufferReader;
 
 // extends Reader
-var Reader = require(24);
+var Reader = require(25);
 (BufferReader.prototype = Object.create(Reader.prototype)).constructor = BufferReader;
 
-var util = require(35);
+var util = require(36);
 
 /**
  * Constructs a new buffer reader instance.
@@ -3906,18 +3940,18 @@ BufferReader.prototype.string = function read_string_buffer() {
  * @returns {Buffer} Value read
  */
 
-},{"24":24,"35":35}],26:[function(require,module,exports){
+},{"25":25,"36":36}],27:[function(require,module,exports){
 "use strict";
 module.exports = Root;
 
 // extends Namespace
-var Namespace = require(21);
+var Namespace = require(22);
 ((Root.prototype = Object.create(Namespace.prototype)).constructor = Root).className = "Root";
 
-var Field   = require(15),
-    Enum    = require(14),
-    OneOf   = require(23),
-    util    = require(33);
+var Field   = require(16),
+    Enum    = require(15),
+    OneOf   = require(24),
+    util    = require(34);
 
 var Type,   // cyclic
     parse,  // might be excluded
@@ -4258,7 +4292,7 @@ Root._configure = function(Type_, parse_, common_) {
     common = common_;
 };
 
-},{"14":14,"15":15,"21":21,"23":23,"33":33}],27:[function(require,module,exports){
+},{"15":15,"16":16,"22":22,"24":24,"34":34}],28:[function(require,module,exports){
 "use strict";
 module.exports = {};
 
@@ -4278,7 +4312,7 @@ module.exports = {};
  * var root = protobuf.roots["myroot"];
  */
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 "use strict";
 
 /**
@@ -4314,13 +4348,13 @@ var rpc = exports;
  * @returns {undefined}
  */
 
-rpc.Service = require(29);
+rpc.Service = require(30);
 
-},{"29":29}],29:[function(require,module,exports){
+},{"30":30}],30:[function(require,module,exports){
 "use strict";
 module.exports = Service;
 
-var util = require(35);
+var util = require(36);
 
 // Extends EventEmitter
 (Service.prototype = Object.create(util.EventEmitter.prototype)).constructor = Service;
@@ -4460,17 +4494,17 @@ Service.prototype.end = function end(endedByRPC) {
     return this;
 };
 
-},{"35":35}],30:[function(require,module,exports){
+},{"36":36}],31:[function(require,module,exports){
 "use strict";
 module.exports = Service;
 
 // extends Namespace
-var Namespace = require(21);
+var Namespace = require(22);
 ((Service.prototype = Object.create(Namespace.prototype)).constructor = Service).className = "Service";
 
-var Method = require(20),
-    util   = require(33),
-    rpc    = require(28);
+var Method = require(21),
+    util   = require(34),
+    rpc    = require(29);
 
 /**
  * Constructs a new service instance.
@@ -4624,28 +4658,28 @@ Service.prototype.create = function create(rpcImpl, requestDelimited, responseDe
     return rpcService;
 };
 
-},{"20":20,"21":21,"28":28,"33":33}],31:[function(require,module,exports){
+},{"21":21,"22":22,"29":29,"34":34}],32:[function(require,module,exports){
 "use strict";
 module.exports = Type;
 
 // extends Namespace
-var Namespace = require(21);
+var Namespace = require(22);
 ((Type.prototype = Object.create(Namespace.prototype)).constructor = Type).className = "Type";
 
-var Enum      = require(14),
-    OneOf     = require(23),
-    Field     = require(15),
-    MapField  = require(18),
-    Service   = require(30),
-    Message   = require(19),
-    Reader    = require(24),
-    Writer    = require(38),
-    util      = require(33),
-    encoder   = require(13),
-    decoder   = require(12),
-    verifier  = require(36),
-    converter = require(11),
-    wrappers  = require(37);
+var Enum      = require(15),
+    OneOf     = require(24),
+    Field     = require(16),
+    MapField  = require(19),
+    Service   = require(31),
+    Message   = require(20),
+    Reader    = require(25),
+    Writer    = require(39),
+    util      = require(34),
+    encoder   = require(14),
+    decoder   = require(13),
+    verifier  = require(37),
+    converter = require(12),
+    wrappers  = require(38);
 
 /**
  * Constructs a new reflected message type instance.
@@ -5218,7 +5252,7 @@ Type.d = function decorateType(typeName) {
     };
 };
 
-},{"11":11,"12":12,"13":13,"14":14,"15":15,"18":18,"19":19,"21":21,"23":23,"24":24,"30":30,"33":33,"36":36,"37":37,"38":38}],32:[function(require,module,exports){
+},{"12":12,"13":13,"14":14,"15":15,"16":16,"19":19,"20":20,"22":22,"24":24,"25":25,"31":31,"34":34,"37":37,"38":38,"39":39}],33:[function(require,module,exports){
 "use strict";
 
 /**
@@ -5227,7 +5261,7 @@ Type.d = function decorateType(typeName) {
  */
 var types = exports;
 
-var util = require(33);
+var util = require(34);
 
 var s = [
     "double",   // 0
@@ -5416,23 +5450,23 @@ types.packed = bake([
     /* bool     */ 0
 ]);
 
-},{"33":33}],33:[function(require,module,exports){
+},{"34":34}],34:[function(require,module,exports){
 "use strict";
 
 /**
  * Various utility functions.
  * @namespace
  */
-var util = module.exports = require(35);
+var util = module.exports = require(36);
 
-var roots = require(27);
+var roots = require(28);
 
 var Type, // cyclic
     Enum;
 
-util.codegen = require(3);
-util.fetch   = require(5);
-util.path    = require(8);
+util.codegen = require(4);
+util.fetch   = require(6);
+util.path    = require(9);
 
 /**
  * Node's fs module if available.
@@ -5540,7 +5574,7 @@ util.decorateType = function decorateType(ctor, typeName) {
 
     /* istanbul ignore next */
     if (!Type)
-        Type = require(31);
+        Type = require(32);
 
     var type = new Type(typeName || ctor.name);
     util.decorateRoot.add(type);
@@ -5565,7 +5599,7 @@ util.decorateEnum = function decorateEnum(object) {
 
     /* istanbul ignore next */
     if (!Enum)
-        Enum = require(14);
+        Enum = require(15);
 
     var enm = new Enum("Enum" + decorateEnumIndex++, object);
     util.decorateRoot.add(enm);
@@ -5581,15 +5615,15 @@ util.decorateEnum = function decorateEnum(object) {
  */
 Object.defineProperty(util, "decorateRoot", {
     get: function() {
-        return roots["decorated"] || (roots["decorated"] = new (require(26))());
+        return roots["decorated"] || (roots["decorated"] = new (require(27))());
     }
 });
 
-},{"14":14,"26":26,"27":27,"3":3,"31":31,"35":35,"5":5,"8":8}],34:[function(require,module,exports){
+},{"15":15,"27":27,"28":28,"32":32,"36":36,"4":4,"6":6,"9":9}],35:[function(require,module,exports){
 "use strict";
 module.exports = LongBits;
 
-var util = require(35);
+var util = require(36);
 
 /**
  * Constructs new long bits.
@@ -5787,33 +5821,33 @@ LongBits.prototype.length = function length() {
          : part2 < 128 ? 9 : 10;
 };
 
-},{"35":35}],35:[function(require,module,exports){
+},{"36":36}],36:[function(require,module,exports){
 "use strict";
 var util = exports;
 
 // used to return a Promise where callback is omitted
-util.asPromise = require(1);
+util.asPromise = require(2);
 
 // converts to / from base64 encoded strings
-util.base64 = require(2);
+util.base64 = require(3);
 
 // base class of rpc.Service
-util.EventEmitter = require(4);
+util.EventEmitter = require(5);
 
 // float handling accross browsers
-util.float = require(6);
+util.float = require(7);
 
 // requires modules optionally and hides the call from bundlers
-util.inquire = require(7);
+util.inquire = require(1);
 
 // converts to / from utf8 encoded strings
-util.utf8 = require(10);
+util.utf8 = require(11);
 
 // provides a node-like buffer pool in the browser
-util.pool = require(9);
+util.pool = require(10);
 
 // utility to work with the low and high bits of a 64 bit value
-util.LongBits = require(34);
+util.LongBits = require(35);
 
 /**
  * An immuable empty array.
@@ -6194,12 +6228,12 @@ util._configure = function() {
         };
 };
 
-},{"1":1,"10":10,"2":2,"34":34,"4":4,"6":6,"7":7,"9":9}],36:[function(require,module,exports){
+},{"1":1,"10":10,"11":11,"2":2,"3":3,"35":35,"5":5,"7":7}],37:[function(require,module,exports){
 "use strict";
 module.exports = verifier;
 
-var Enum      = require(14),
-    util      = require(33);
+var Enum      = require(15),
+    util      = require(34);
 
 function invalid(field, expected) {
     return field.name + ": " + expected + (field.repeated && expected !== "array" ? "[]" : field.map && expected !== "object" ? "{k:"+field.keyType+"}" : "") + " expected";
@@ -6371,7 +6405,7 @@ function verifier(mtype) {
     ("return null");
     /* eslint-enable no-unexpected-multiline */
 }
-},{"14":14,"33":33}],37:[function(require,module,exports){
+},{"15":15,"34":34}],38:[function(require,module,exports){
 "use strict";
 
 /**
@@ -6381,7 +6415,7 @@ function verifier(mtype) {
  */
 var wrappers = exports;
 
-var Message = require(19);
+var Message = require(20);
 
 /**
  * From object converter part of an {@link IWrapper}.
@@ -6449,11 +6483,11 @@ wrappers[".google.protobuf.Any"] = {
     }
 };
 
-},{"19":19}],38:[function(require,module,exports){
+},{"20":20}],39:[function(require,module,exports){
 "use strict";
 module.exports = Writer;
 
-var util      = require(35);
+var util      = require(36);
 
 var BufferWriter; // cyclic
 
@@ -6910,15 +6944,15 @@ Writer._configure = function(BufferWriter_) {
     BufferWriter = BufferWriter_;
 };
 
-},{"35":35}],39:[function(require,module,exports){
+},{"36":36}],40:[function(require,module,exports){
 "use strict";
 module.exports = BufferWriter;
 
 // extends Writer
-var Writer = require(38);
+var Writer = require(39);
 (BufferWriter.prototype = Object.create(Writer.prototype)).constructor = BufferWriter;
 
-var util = require(35);
+var util = require(36);
 
 var Buffer = util.Buffer;
 
@@ -6993,7 +7027,7 @@ BufferWriter.prototype.string = function write_string_buffer(value) {
  * @returns {Buffer} Finished buffer
  */
 
-},{"35":35,"38":38}]},{},[16])
+},{"36":36,"39":39}]},{},[17])
 
 })(typeof window==="object"&&window||typeof self==="object"&&self||this);
 //# sourceMappingURL=protobuf.js.map

@@ -1,6 +1,6 @@
-@protobufjs/inquire
+@autopilothq/inquire
 ===================
-[![npm](https://img.shields.io/npm/v/@protobufjs/inquire.svg)](https://www.npmjs.com/package/@protobufjs/inquire)
+[![npm](https://img.shields.io/npm/v/@autopilothq/inquire.svg)](https://www.npmjs.com/package/@autopilothq/inquire)
 
 Requires a module only if available and hides the require call from bundlers.
 

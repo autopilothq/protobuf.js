@@ -1,6 +1,6 @@
 /*!
  * protobuf.js v6.8.0 (c) 2016, daniel wirtz
- * compiled tue, 08 aug 2017 04:30:34 utc
+ * compiled tue, 08 aug 2017 04:39:03 utc
  * licensed under the bsd-3-clause license
  * see: https://github.com/dcodeio/protobuf.js for details
  */
@@ -36,6 +36,40 @@
         module.exports = protobuf;
 
 })/* end of prelude */({1:[function(require,module,exports){
+"use strict";
+module.exports = inquire;
+
+/**
+ * Requires a module only if available.
+ * @memberof util
+ * @param {string} moduleName Module to require
+ * @returns {?Object} Required module if available and not empty, otherwise `null`
+ */
+function inquire(moduleName) {
+    try {
+        var mod = require(moduleName); // eslint-disable-line no-eval
+        if (mod && (mod.length || Object.keys(mod).length))
+            return mod;
+    } catch (e) {} // eslint-disable-line no-empty
+    return null;
+}
+
+/*
+// maybe worth a shot to prevent renaming issues:
+// see: https://github.com/webpack/webpack/blob/master/lib/dependencies/CommonJsRequireDependencyParserPlugin.js
+// triggers on:
+// - expression require.cache
+// - expression require (???)
+// - call require
+// - call require:commonjs:item
+// - call require:commonjs:context
+
+Object.defineProperty(Function.prototype, "__self", { get: function() { return this; } });
+var r = require.__self;
+delete Function.prototype.__self;
+*/
+
+},{}],2:[function(require,module,exports){
 "use strict";
 module.exports = asPromise;
 
@@ -89,7 +123,7 @@ function asPromise(fn, ctx/*, varargs */) {
     });
 }
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 "use strict";
 
 /**
@@ -230,7 +264,7 @@ base64.test = function test(string) {
     return /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(string);
 };
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
 module.exports = EventEmitter;
 
@@ -308,7 +342,7 @@ EventEmitter.prototype.emit = function emit(evt) {
     return this;
 };
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 
 module.exports = factory(factory);
@@ -643,25 +677,6 @@ function readUintBE(buf, pos) {
           | buf[pos + 1] << 16
           | buf[pos + 2] << 8
           | buf[pos + 3]) >>> 0;
-}
-
-},{}],5:[function(require,module,exports){
-"use strict";
-module.exports = inquire;
-
-/**
- * Requires a module only if available.
- * @memberof util
- * @param {string} moduleName Module to require
- * @returns {?Object} Required module if available and not empty, otherwise `null`
- */
-function inquire(moduleName) {
-    try {
-        var mod = eval("quire".replace(/^/,"re"))(moduleName); // eslint-disable-line no-eval
-        if (mod && (mod.length || Object.keys(mod).length))
-            return mod;
-    } catch (e) {} // eslint-disable-line no-empty
-    return null;
 }
 
 },{}],6:[function(require,module,exports){
@@ -1723,19 +1738,19 @@ LongBits.prototype.length = function length() {
 var util = exports;
 
 // used to return a Promise where callback is omitted
-util.asPromise = require(1);
+util.asPromise = require(2);
 
 // converts to / from base64 encoded strings
-util.base64 = require(2);
+util.base64 = require(3);
 
 // base class of rpc.Service
-util.EventEmitter = require(3);
+util.EventEmitter = require(4);
 
 // float handling accross browsers
-util.float = require(4);
+util.float = require(5);
 
 // requires modules optionally and hides the call from bundlers
-util.inquire = require(5);
+util.inquire = require(1);
 
 // converts to / from utf8 encoded strings
 util.utf8 = require(7);
