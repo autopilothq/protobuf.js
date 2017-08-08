@@ -1,6 +1,6 @@
 /*!
  * protobuf.js v6.8.0 (c) 2016, daniel wirtz
- * compiled fri, 09 jun 2017 21:00:38 utc
+ * compiled tue, 08 aug 2017 04:25:37 utc
  * licensed under the bsd-3-clause license
  * see: https://github.com/dcodeio/protobuf.js for details
  */
@@ -280,10 +280,9 @@ function codegen(functionParams, functionName) {
                     scopeValues[scopeOffset] = formatStringOrScope[scopeKeys[scopeOffset++]];
                 }
                 scopeParams[scopeOffset] = source;
-                return Function.apply(null, scopeParams)
-                               .apply(null, scopeValues);
+                return Function.apply(null, scopeParams).apply(null, scopeValues); // eslint-disable-line no-new-func
             }
-            return Function(source)();
+            return Function(source)(); // eslint-disable-line no-new-func
         }
 
         // otherwise append to body
@@ -310,7 +309,7 @@ function codegen(functionParams, functionName) {
 
     function toString(functionNameOverride) {
         return "function " + (functionNameOverride || functionName || "") + "(" + (functionParams && functionParams.join(",") || "") + "){\n  " + body.join("\n  ") + "\n}";
-    };
+    }
 
     Codegen.toString = toString;
     return Codegen;
